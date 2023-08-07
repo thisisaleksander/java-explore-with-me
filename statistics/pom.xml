@@ -17,9 +17,9 @@
 <packaging>pom</packaging>
 
 <modules>
-    <module>client</module>
-    <module>server</module>
-    <module>dto</module>
+    <module>statistics-client</module>
+    <module>statistics-server</module>
+    <module>general-dto</module>
 </modules>
 
 </project>

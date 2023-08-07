@@ -9,7 +9,8 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>client</artifactId>
+    <artifactId>statistics-client</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 
     <dependencies>
 

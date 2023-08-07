@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class StatisticsDto {
+public class StatisticsLocalDto {
     String app;
     String uri;
     String ip;
