@@ -1,4 +1,4 @@
-version: '3.1'
+version: '1.0'
 services:
   statistics-server:
     build: statistics/statistics-server
@@ -9,9 +9,9 @@ services:
     depends_on:
       - statistics-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats-db
-      - SPRING_DATASOURCE_USERNAME=root
-      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://statistics-db:5432/statistics-db
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=password
 
   statistics-db:
     image: postgres:14-alpine
@@ -19,9 +19,9 @@ services:
     ports:
       - "6541:5432"
     environment:
-      - POSTGRES_DB=stats-db
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=statistics-db
+      - POSTGRES_USER=sa
+      - POSTGRES_PASSWORD=password
 
   main:
     build: main
@@ -33,9 +33,9 @@ services:
       - main-db
     environment:
 
-      - SPRING_DATASOURCE_URL_EWM=jdbc:postgresql://ewm-db:5430/ewm-db
-      - SPRING_DATASOURCE_USERNAME_EWM=root
-      - SPRING_DATASOURCE_PASSWORD_EWM=root
+      - SPRING_DATASOURCE_URL_EWM=jdbc:postgresql://main-db:5430/main-db
+      - SPRING_DATASOURCE_USERNAME_EWM=sa
+      - SPRING_DATASOURCE_PASSWORD_EWM=password
 
   main-db:
     image: postgres:14-alpine
@@ -44,5 +44,5 @@ services:
       - "6540:5430"
     environment:
       - POSTGRES_DB=ewm-db
-      - POSTGRES_USER=root
-      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=sa
+      - POSTGRES_PASSWORD=password
