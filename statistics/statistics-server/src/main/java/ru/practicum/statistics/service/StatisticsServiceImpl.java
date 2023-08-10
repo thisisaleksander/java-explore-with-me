@@ -1,4 +1,4 @@
-package ru.practicum.service;
+package ru.practicum.statistics.service;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -6,15 +6,16 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.StatisticsDto;
-import ru.practicum.model.Statistics;
-import ru.practicum.model.StatisticsLocalDto;
-import ru.practicum.utils.DateUtils;
+import ru.practicum.statistics.model.Statistics;
+import ru.practicum.statistics.model.StatisticsLocalDto;
+import ru.practicum.statistics.utils.DateUtils;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static ru.practicum.utils.DateUtils.dateTimeFormatter;
+import static ru.practicum.statistics.utils.DateUtils.dateTimeFormatter;
 
 @Slf4j
 @Service
