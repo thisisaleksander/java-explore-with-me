@@ -2,7 +2,7 @@ create table if not exists users (
     id bigint generated always as identity not null,
     email varchar(254) not null,
     name varchar(250) not null,
-    unique (email),
+    constraint unique_user_email unique (email),
     constraint pk_users primary key (id)
 );
 
@@ -16,7 +16,7 @@ create table if not exists locations (
 create table if not exists categories (
     id bigint generated always as identity not null,
     name varchar(50),
-    unique (name),
+    constraint unique_category_name unique (name),
     constraint pk_categories primary key (id)
 );
 
@@ -41,7 +41,7 @@ create table if not exists events (
     constraint fk_events_to_categories foreign key (category_id) references categories(id),
     constraint fk_events_to_users foreign key (initiator_id) references users(id),
     constraint fk_events_to_locations foreign key (location_id) references locations(id),
-    unique (id)
+    constraint unique_event_id unique (id)
 );
 
 create table if not exists compilations (
@@ -51,7 +51,7 @@ create table if not exists compilations (
     title varchar(200),
     constraint pk_complications primary key (id),
     constraint fk_compilations_to_events foreign key (event_id) references events (id),
-    unique (id)
+    constraint unique_compilation_id unique (id)
 );
 
 create table if not exists compilations_to_events (
@@ -68,5 +68,5 @@ create table if not exists requests (
     constraint pk_requests primary key (id),
     constraint fk_requests_to_events foreign key (event_id) references events(id),
     constraint fk_requests_to_users foreign key (requester_id) references users(id),
-    unique (id)
+    constraint unique_request_id unique (id)
 );
