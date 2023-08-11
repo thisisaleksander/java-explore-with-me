@@ -12,18 +12,19 @@ import ru.practicum.statistics.model.StatisticsLocalDto;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.practicum.statistics.constants.Constants.STATISTICS_CLIENT_LINK;
+import static ru.practicum.statistics.utils.DateUtils.END;
+import static ru.practicum.statistics.utils.DateUtils.START;
+
 @Slf4j
 @Component
 public class StatisticsClient {
     private final RestTemplate restTemplate;
-    public static final String START = "2000-01-01 01:01:01";
-    public static final String END = "3000-01-01 01:01:01";
-
     ObjectMapper mapper = new  ObjectMapper();
 
     public StatisticsClient(RestTemplateBuilder builder) {
         this.restTemplate = builder
-                .uriTemplateHandler(new DefaultUriBuilderFactory("http://stats-server:9090"))
+                .uriTemplateHandler(new DefaultUriBuilderFactory(STATISTICS_CLIENT_LINK))
                 .build();
     }
 
@@ -44,7 +45,9 @@ public class StatisticsClient {
         uris.add(uri);
         Long views = 0L;
         try {
-            List<StatisticsDto> response = mapper.convertValue(restTemplate.getForObject("/stats?start=" + START + "&end=" + END + "&uris=" + uri + "&unique=true", List.class), new TypeReference<List<StatisticsDto>>() {});
+            List<StatisticsDto> response = mapper.convertValue(
+                    restTemplate.getForObject("/stats?start=" + START + "&end=" + END + "&uris=" + uri + "&unique=true", List.class),
+                    new TypeReference<>() {});
             log.info("response = {}", response);
             log.info("1stats = {}", response.get(0));
             views = Long.valueOf(response.get(0).getHits());
