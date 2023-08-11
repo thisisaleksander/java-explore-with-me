@@ -1,9 +1,9 @@
 package ru.practicum.statistics.exception;
 
-public class ErrorResponse {
+public class StatisticsErrorResponse {
     private final String error;
 
-    public ErrorResponse(String error) {
+    public StatisticsErrorResponse(String error) {
         this.error = error;
     }
 

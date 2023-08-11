@@ -11,30 +11,30 @@ import ru.practicum.statistics.exception.model.ValidationException;
 
 @Slf4j
 @RestControllerAdvice
-public class ErrorHandler {
+public class StatisticsErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleNotFoundException(final NotFoundException e) {
+    public StatisticsErrorResponse handleNotFoundException(final NotFoundException e) {
         log.info("404 {}", e.getMessage());
-        return new ErrorResponse(
+        return new StatisticsErrorResponse(
                 e.getMessage()
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleValidationException(final ValidationException e) {
+    public StatisticsErrorResponse handleValidationException(final ValidationException e) {
         log.info("409 {}", e.getMessage());
-        return new ErrorResponse(
+        return new StatisticsErrorResponse(
                 e.getMessage()
         );
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleValidationException(final ResponseException e) {
+    public StatisticsErrorResponse handleValidationException(final ResponseException e) {
         log.info("400 {}", e.getMessage());
-        return new ErrorResponse(
+        return new StatisticsErrorResponse(
                 e.getMessage()
         );
     }
