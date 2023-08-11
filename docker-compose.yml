@@ -16,8 +16,6 @@ services:
   statistics-db:
     image: postgres:14-alpine
     container_name: statistics-db
-    ports:
-      - "6541:5432"
     environment:
       - POSTGRES_DB=statistics-db
       - POSTGRES_USER=sa
@@ -33,16 +31,14 @@ services:
     depends_on:
       - main-db
     environment:
-
-      - SPRING_DATASOURCE_URL_EWM=jdbc:postgresql://main-db:5430/main-db
-      - SPRING_DATASOURCE_USERNAME_EWM=sa
-      - SPRING_DATASOURCE_PASSWORD_EWM=password
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://main-db:5432/main-db
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=password
+      - STATISTICS_SERVER_URL=http://statistics-server:9090
 
   main-db:
     image: postgres:14-alpine
     container_name: main-db
-    ports:
-      - "6540:5430"
     environment:
       - POSTGRES_DB=main-db
       - POSTGRES_USER=sa
