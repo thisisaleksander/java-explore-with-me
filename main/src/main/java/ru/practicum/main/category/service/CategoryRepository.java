@@ -10,11 +10,11 @@ import java.util.Optional;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    @Query("SELECT Category.id FROM Category")
+    @Query(value = "SELECT c.id FROM Category as c")
     List<Long> findAllId();
 
     Optional<Category> findByName(String name);
 
-    @Query("SELECT Category FROM Category WHERE Category.id IN (?1)")
+    @Query("SELECT c FROM Category as c WHERE c.id IN (?1)")
     List<Category> findByIds(List<Long> categories);
 }
