@@ -10,7 +10,7 @@ services:
       - statistics-db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://statistics-db:5432/statistics-db
-      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=password
 
   statistics-db:
@@ -18,7 +18,7 @@ services:
     container_name: statistics-db
     environment:
       - POSTGRES_DB=statistics-db
-      - POSTGRES_USER=sa
+      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
       - POSTGRES_HOST_AUTH_METHOD=trust
 
@@ -32,7 +32,7 @@ services:
       - main-db
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://main-db:5432/main-db
-      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=password
       - STATISTICS_SERVER_URL=http://statistics-server:9090
 
@@ -41,6 +41,6 @@ services:
     container_name: main-db
     environment:
       - POSTGRES_DB=main-db
-      - POSTGRES_USER=sa
+      - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
       - POSTGRES_HOST_AUTH_METHOD=trust

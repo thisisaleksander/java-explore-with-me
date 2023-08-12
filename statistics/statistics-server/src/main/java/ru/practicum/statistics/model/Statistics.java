@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Statistics", schema = "public")
+@Table(name = "statistics", schema = "public")
 @Getter
 @Setter
 @Builder
