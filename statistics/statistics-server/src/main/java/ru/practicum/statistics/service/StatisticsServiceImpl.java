@@ -24,7 +24,7 @@ import static ru.practicum.statistics.utils.DateUtils.dateTimeFormatter;
 public class StatisticsServiceImpl implements StatisticsService {
 
     StatisticsRepository statisticsRepository;
-    DateUtils utils;
+    DateUtils utils = new DateUtils();
 
     @Override
     public List<StatisticsDto> getStatisticsBy(String start, String end, List<String> uris, boolean unique) {
