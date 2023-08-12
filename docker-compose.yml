@@ -1,46 +1,52 @@
 version: '3.1'
 services:
-  statistics-server:
+  ewm-statistics-server:
     build: statistics/statistics-server
-    image: ewm-statistics-server
-    container_name: ewm-statistics-server
+    image: statistics-server-image
+    container_name: statistics_server_container
     ports:
       - "9090:9090"
     depends_on:
-      - statistics-db
+      - ewm-statistics-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://statistics-db:5432/statistics-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-statistics-db:5432/statistics_db
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=password
+      - DB_HOST=ewm-statistics-db
+      - DB_PORT=6541
 
-  statistics-db:
+  ewm-statistics-db:
     image: postgres:14-alpine
-    container_name: statistics-db
+    container_name: statistics_db_container
+    ports:
+      - "6541:5432"
     environment:
-      - POSTGRES_DB=statistics-db
+      - POSTGRES_DB=statistics_db
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
-      - POSTGRES_HOST_AUTH_METHOD=trust
 
-  main:
+  ewm-main:
     build: main
-    image: ewm-main
-    container_name: ewm-main
+    image: main-image
+    container_name: main_container
     ports:
       - "8080:8080"
     depends_on:
-      - main-db
+      - ewm-main-db
+      - ewm-statistics-server
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://main-db:5432/main-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-main-db:5432/main_db
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=password
-      - STATISTICS_SERVER_URL=http://statistics-server:9090
+      - DB_HOST=ewm-db
+      - DB_POST=6542
 
-  main-db:
+  ewm-main-db:
     image: postgres:14-alpine
-    container_name: main-db
+    container_name: main_db_container
+    ports:
+      - "6542:5432"
     environment:
-      - POSTGRES_DB=main-db
+      - POSTGRES_DB=main_db
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
-      - POSTGRES_HOST_AUTH_METHOD=trust
