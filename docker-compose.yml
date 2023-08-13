@@ -1,49 +1,46 @@
 version: '3.1'
 services:
-  ewm-statistics-server:
-    build: statistics/statistics-server
-    image: statistics-server-image
-    container_name: statistics_server_container
+  stats-server:
+    build: stats/stats-server
+    image: ewm-stats-server
+    container_name: ewm-stats-server
     ports:
       - "9090:9090"
     depends_on:
-      - ewm-statistics-db
+      - stats-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-statistics-db:5432/statistics_db
-      - SPRING_DATASOURCE_USERNAME=admin
-      - SPRING_DATASOURCE_PASSWORD=password
-      - DB_HOST=ewm-statistics-db
-      - DB_PORT=5432
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats-db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
 
-  ewm-statistics-db:
+  stats-db:
     image: postgres:14-alpine
-    container_name: statistics_db_container
-    ports:
-      - "6541:5432"
-    environment:
-      - POSTGRES_DB=statistics_db
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=password
+    container_name: stats-db
 
-  ewm-main:
-    build: main
-    image: main-image
-    container_name: main_container
+    environment:
+      - POSTGRES_DB=stats-db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+
+  main-service:
+    build: main-service
+    image: ewm-main-service
+    container_name: ewm-main-service
     ports:
       - "8080:8080"
     depends_on:
-      - ewm-main-db
+      - ewm-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-main-db:5432/main_db
-      - SPRING_DATASOURCE_USERNAME=admin
-      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-db:5432/ewm-db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=root
+      - STATS_SERVER_URL=http://stats-server:9090
 
-  ewm-main-db:
+  ewm-db:
     image: postgres:14-alpine
-    container_name: main_db_container
-    ports:
-      - "6542:5432"
+    container_name: ewm-db
+
     environment:
-      - POSTGRES_DB=main_db
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=ewm-db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
