@@ -12,6 +12,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://ewm-statistics-db:5432/statistics_db
       - SPRING_DATASOURCE_USERNAME=admin
       - SPRING_DATASOURCE_PASSWORD=password
+      - DB_HOST=ewm-statistics-db
+      - DB_PORT=5432
 
   ewm-statistics-db:
     image: postgres:14-alpine
