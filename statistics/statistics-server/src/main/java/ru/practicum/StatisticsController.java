@@ -18,6 +18,12 @@ import java.util.List;
 public class StatisticsController {
     private final StatisticsService statisticsService;
 
+
+    @GetMapping("/hello")
+    public String sayHello() {
+        return "Hello from main";
+    }
+
     @GetMapping("/stats")
     public List<StatisticsDto> getStatisticBy(@RequestParam(value = "start") String start,
                                               @RequestParam(value = "end") String end,

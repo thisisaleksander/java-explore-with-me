@@ -29,6 +29,14 @@ public class PublicController {
     CategoryService categoryService;
     EventService eventService;
 
+    /* testing response
+    @GetMapping("/hello")
+    public String sayHello() {
+        return "Hello from main";
+    }
+
+     */
+
     @GetMapping("/compilations")
     public List<CompilationDto> getCompilations(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
                                                 @Positive @RequestParam(name = "size", defaultValue = "10") Integer size,
