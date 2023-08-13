@@ -35,6 +35,6 @@ public class Statistics {
     @Column(name = "ip")
     String ip;
 
-    @Column(name = "time_added")
+    @Column(name = "created")
     LocalDateTime created;
 }

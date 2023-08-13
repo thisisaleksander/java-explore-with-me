@@ -1,4 +1,4 @@
-package ru.practicum.statistics.model;
+package ru.practicum;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

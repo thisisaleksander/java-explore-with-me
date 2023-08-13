@@ -7,14 +7,13 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.DefaultUriBuilderFactory;
-import ru.practicum.statistics.model.StatisticsLocalDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.practicum.statistics.constants.Constants.STATISTICS_CLIENT_LINK;
-import static ru.practicum.statistics.utils.DateUtils.END;
-import static ru.practicum.statistics.utils.DateUtils.START;
+import static ru.practicum.constants.Constants.STATISTICS_CLIENT_LINK;
+import static ru.practicum.utils.DateUtils.END;
+import static ru.practicum.utils.DateUtils.START;
 
 @Slf4j
 @Component
@@ -47,7 +46,7 @@ public class StatisticsClient {
         try {
             List<StatisticsDto> response = mapper.convertValue(
                     restTemplate.getForObject("/stats?start=" + START + "&end=" + END + "&uris=" + uri + "&unique=true", List.class),
-                    new TypeReference<>() {});
+                    new TypeReference<List<StatisticsDto>>() {});
             log.info("response = {}", response);
             log.info("1stats = {}", response.get(0));
             views = Long.valueOf(response.get(0).getHits());
