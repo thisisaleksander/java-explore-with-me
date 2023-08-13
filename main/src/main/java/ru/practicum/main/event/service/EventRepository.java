@@ -16,9 +16,9 @@ import java.util.Optional;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-    @Query("SELECT Event FROM Event WHERE Event.initiator IN ?1 " +
-            "AND Event.state IN ?2 AND Event.category IN ?3 " +
-            "AND Event.eventDate > ?4 AND Event.eventDate < ?5 ")
+    @Query(value = "SELECT e FROM Event as e WHERE e.initiator IN ?1 " +
+            "AND e.state IN ?2 AND e.category IN ?3 " +
+            "AND e.eventDate > ?4 AND e.eventDate < ?5 ")
     Page<Event> findByInitiatorAndStateAndCategoryAndEventDateBeforeEnd(List<User> users,
                                                                         List<String> states,
                                                                         List<Category> categories,
@@ -26,23 +26,23 @@ public interface EventRepository extends JpaRepository<Event, Long> {
                                                                         LocalDateTime end,
                                                                         Pageable page);
 
-    @Query("SELECT Event FROM Event WHERE Event.annotation LIKE %?1% " +
-            "AND Event.paid IN (?2) AND Event.eventDate > ?3 AND Event.eventDate < ?4")
-    Page<Event> getEventsNoCategory(String text,
-                                    List<Boolean> paid,
-                                    LocalDateTime rangeStart,
-                                    LocalDateTime rangeEnd,
-                                    Pageable page);
+    @Query(value = "SELECT e FROM Event as e WHERE e.annotation LIKE %?1% " +
+            "AND e.paid IN ?2 AND e.eventDate > ?3 AND e.eventDate < ?4")
+    Page<Event> getEventIgnoreCategory(String text,
+                                       List<Boolean> paid,
+                                       LocalDateTime start,
+                                       LocalDateTime end,
+                                       Pageable page);
 
-    @Query("SELECT Event from Event WHERE Event.annotation LIKE %?1% " +
-            "AND Event.category.id IN (?2) AND Event.paid IN (?3) " +
-            "AND Event.eventDate > ?4 AND Event.eventDate < ?5")
-    Page<Event> findByQuery(String text,
-                            List<Long> categories,
-                            List<Boolean> paid,
-                            LocalDateTime rangeStart,
-                            LocalDateTime rangeEnd,
-                            Pageable page);
+    @Query(value = "SELECT e FROM Event as e WHERE e.annotation LIKE %?1% " +
+            "AND e.category.id IN ?2 AND e.paid IN ?3 " +
+            "AND e.eventDate > ?4 AND e.eventDate < ?5")
+    Page<Event> findBy(String text,
+                       List<Long> categories,
+                       List<Boolean> paid,
+                       LocalDateTime start,
+                       LocalDateTime end,
+                       Pageable page);
 
     Event findByIdAndInitiator(Long eventId, User initiator);
 
@@ -53,8 +53,8 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             nativeQuery = true)
     void updateConfirmedRequest(int confirmedRequest, Long eventId);
 
-    @Query("SELECT Event FROM Event WHERE Event.id IN ?1 ")
-    List<Event> findByIds(List<Long> events);
+    @Query(value = "SELECT e FROM Event as e WHERE e.id IN ?1 ")
+    List<Event> findById(List<Long> eventId);
 
     Optional<Event> findByCategory(Category category);
 }

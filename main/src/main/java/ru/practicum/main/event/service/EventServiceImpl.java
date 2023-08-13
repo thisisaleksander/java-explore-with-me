@@ -24,6 +24,7 @@ import ru.practicum.main.user.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static ru.practicum.main.utils.DateUtils.dateTimeFormatter;
@@ -304,12 +305,12 @@ public class EventServiceImpl implements EventService {
         if (categories.isEmpty()) {
             statisticsClient.postHit(uri, ip);
             return EventMapper.mapToMultipleEventsDto(
-                    eventRepository.getEventsNoCategory(text, listPaid, start, end, page)
+                    eventRepository.getEventIgnoreCategory(text, listPaid, start, end, page)
                             .toList());
         }
         statisticsClient.postHit(uri, ip);
         return EventMapper.mapToMultipleEventsDto(
-                eventRepository.findByQuery(text, categories, listPaid, start, end, page)
+                eventRepository.findBy(text, categories, listPaid, start, end, page)
                         .toList());
     }
 
@@ -333,7 +334,11 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> findByIds(List<Long> eventIds) {
-        return eventRepository.findByIds(eventIds);
+        try {
+            return eventRepository.findById(eventIds);
+        } catch (IllegalArgumentException exception) {
+            return Collections.emptyList();
+        }
     }
 
     @Override
