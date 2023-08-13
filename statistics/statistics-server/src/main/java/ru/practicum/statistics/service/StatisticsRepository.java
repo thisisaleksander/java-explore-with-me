@@ -22,5 +22,5 @@ public interface StatisticsRepository extends JpaRepository<Statistics, Long> {
 
     @Query("SELECT s.uri FROM Statistics as s WHERE s.uri in ?1 " +
             "AND s.created > ?2 AND s.created < ?3")
-    List<String> getUrisByUri(List<String> uris, LocalDateTime dateTimeFrom, LocalDateTime dateTimeTo);
+    List<String> getUrisByUri(List<String> uris, LocalDateTime start, LocalDateTime end);
 }
