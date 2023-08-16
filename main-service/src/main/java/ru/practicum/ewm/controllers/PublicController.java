@@ -1,4 +1,4 @@
-package ru.practicum.ewm.contrillers;
+package ru.practicum.ewm.controllers;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
