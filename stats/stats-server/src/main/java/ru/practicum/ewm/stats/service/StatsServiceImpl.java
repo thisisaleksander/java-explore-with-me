@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stats;
+package ru.practicum.ewm.stats.service;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +8,9 @@ import org.springframework.stereotype.Service;
 import ru.practicum.ewm.dto.stats.StatsDTO;
 import ru.practicum.ewm.dto.stats.StatsDtoForSave;
 import ru.practicum.ewm.stats.exception.ResponseException;
+import ru.practicum.ewm.stats.model.Stats;
+import ru.practicum.ewm.stats.service.StatsRepository;
+import ru.practicum.ewm.stats.service.StatsService;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

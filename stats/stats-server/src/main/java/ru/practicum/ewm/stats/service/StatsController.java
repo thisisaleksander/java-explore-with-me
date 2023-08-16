@@ -1,4 +1,4 @@
-package ru.practicum.ewm.stats;
+package ru.practicum.ewm.stats.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.dto.stats.StatsDTO;
 import ru.practicum.ewm.dto.stats.StatsDtoForSave;
+import ru.practicum.ewm.stats.service.StatsService;
 
 import javax.validation.Valid;
 import java.util.List;
