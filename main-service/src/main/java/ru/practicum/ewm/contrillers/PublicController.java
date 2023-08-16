@@ -8,6 +8,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.category.CategoryService;
 import ru.practicum.ewm.category.model.CategoryDto;
+import ru.practicum.ewm.comment.CommentService;
+import ru.practicum.ewm.comment.model.ParticipationCommentDto;
 import ru.practicum.ewm.compilation.CompilationService;
 import ru.practicum.ewm.compilation.model.CompilationDto;
 import ru.practicum.ewm.event.EventService;
@@ -31,6 +33,8 @@ public class PublicController {
     CategoryService categoryService;
 
     EventService eventService;
+
+    CommentService commentService;
 
     @GetMapping("/compilations")
     public List<CompilationDto> getCompilations(@PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
@@ -87,5 +91,13 @@ public class PublicController {
         log.info("endpoint path: {}", uri);
         log.info("Get event {}", id);
         return eventService.getEventPublic(id, uri, ip);
+    }
+
+    @GetMapping("/comments/{eventId}")
+    public List<ParticipationCommentDto> getAllCommentsPublic(@PathVariable Long eventId,
+                                                              @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                              @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        log.info("Get comments for eventId={}", eventId);
+        return commentService.getAllCommentsForEvent(eventId, from, size);
     }
 }

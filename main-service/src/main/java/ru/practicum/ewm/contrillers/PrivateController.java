@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.ewm.comment.CommentService;
+import ru.practicum.ewm.comment.model.ParticipationCommentDto;
 import ru.practicum.ewm.event.EventService;
 import ru.practicum.ewm.event.model.EventFullDto;
 import ru.practicum.ewm.event.model.EventRequestDto;
@@ -19,6 +21,7 @@ import ru.practicum.ewm.request.model.EventRequestStatusUpdateResult;
 import ru.practicum.ewm.request.model.ParticipationRequestDto;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 import javax.ws.rs.QueryParam;
@@ -36,10 +39,12 @@ public class PrivateController {
 
     RequestService requestService;
 
+    CommentService commentService;
+
     @GetMapping("/events")
     public List<EventFullDto> getEvents(@PathVariable Long userId,
-                                 @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
-                                 @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+                                        @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                        @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
         log.info("Get events from={}, size={}", from, size);
         return eventService.getEventsPrivate(userId, from, size);
     }
@@ -48,7 +53,7 @@ public class PrivateController {
 
     @PostMapping("/events")
     public ResponseEntity<EventFullDto> saveEvent(@PathVariable Long userId,
-                           @RequestBody @Valid EventRequestDto eventRequestDto) {
+                                                  @RequestBody @Valid EventRequestDto eventRequestDto) {
         System.out.println(eventRequestDto);
         return new ResponseEntity<EventFullDto>(eventService.saveEventPrivate(userId, eventRequestDto), HttpStatus.CREATED);
     }
@@ -62,8 +67,8 @@ public class PrivateController {
 
     @PatchMapping("/events/{eventId}")
     public EventFullDto patchEvent(@RequestBody @Valid UpdateEventAdminRequest updateEventAdminRequest,
-                            @PathVariable Long userId,
-                            @PathVariable Long eventId) {
+                                   @PathVariable Long userId,
+                                   @PathVariable Long eventId) {
         return eventService.patchEventPrivate(updateEventAdminRequest, userId, eventId);
     }
 
@@ -91,7 +96,7 @@ public class PrivateController {
 
     @PostMapping("/requests")
     public ResponseEntity<ParticipationRequestDto> saveRequest(@PathVariable Long userId,
-                               @QueryParam(value = "eventId") Long eventId) {
+                                                               @QueryParam(value = "eventId") Long eventId) {
         log.info("Post requests userId={}, eventId={}", userId, eventId);
         if (eventId == null) {
             throw new ResponseException("eventId == null");
@@ -102,8 +107,45 @@ public class PrivateController {
 
     @PatchMapping("/requests/{requestId}/cancel")
     public ParticipationRequestDto cancelRequest(@PathVariable Long userId,
-                                   @PathVariable Long requestId) {
+                                                 @PathVariable Long requestId) {
         return requestService.cancelRequest(userId, requestId);
     }
 
+    @GetMapping("/comments")
+    public List<ParticipationCommentDto> getAllCommentsPrivate(@PathVariable Long userId,
+                                                               @PositiveOrZero @RequestParam(name = "from", defaultValue = "0") Integer from,
+                                                               @Positive @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        log.info("Get comments userId={}", userId);
+        return commentService.getAllCommentsPrivate(userId, from, size);
+    }
+
+    @PostMapping("/comments")
+    public ResponseEntity<ParticipationCommentDto> saveComment(@RequestBody @Valid ParticipationCommentDto participationCommentDto,
+                                                               @PathVariable Long userId,
+                                                               @QueryParam(value = "eventId") @NotNull Long eventId) {
+        log.info("Post Comment for userId={}, eventId={}", userId, eventId);
+        return new ResponseEntity<ParticipationCommentDto>(commentService.saveComment(participationCommentDto, userId, eventId), HttpStatus.CREATED);
+
+    }
+
+    @GetMapping("/comments/{commentId}")
+    public ParticipationCommentDto getCommentPrivate(@PathVariable Long userId,
+                                                     @PathVariable Long commentId) {
+        return commentService.getCommentPrivate(userId, commentId);
+    }
+
+    @PatchMapping("/comments/{commentId}")
+    public ResponseEntity<ParticipationCommentDto> patchCommentPrivate(@RequestBody @Valid ParticipationCommentDto participationCommentDto,
+                                                                       @PathVariable Long userId,
+                                                                       @PathVariable Long commentId) {
+        return new ResponseEntity<ParticipationCommentDto>(commentService.patchCommentPrivate(participationCommentDto, userId, commentId), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<ParticipationCommentDto> deleteCommentPrivate(@PathVariable Long userId,
+                                                                        @PathVariable Long commentId) {
+        log.info("Delete Comment for userId={}, commentId={}", userId, commentId);
+        commentService.deleteCommentPrivate(userId, commentId);
+        return new  ResponseEntity<ParticipationCommentDto>(HttpStatus.NO_CONTENT);
+    }
 }
