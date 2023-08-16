@@ -2,6 +2,7 @@ package ru.practicum.ewm.request.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 
 import java.util.List;
 
