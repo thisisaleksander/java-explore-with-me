@@ -1,38 +1,34 @@
-CREATE TABLE IF NOT EXISTS users
-(
+CREATE TABLE IF NOT EXISTS users (
     id      BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
     email   varchar(254) NOT NULL,
     name    varchar(250) NOT NULL,
     UNIQUE  (email)
 );
 
-CREATE TABLE IF NOT EXISTS locations
-(
+CREATE TABLE IF NOT EXISTS locations (
     id      BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
     lat     FLOAT NOT NULL,
     lon     FLOAT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS categories
-(
+CREATE TABLE IF NOT EXISTS categories (
     id      BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
-    name    varchar(50),
+    name    varchar(50) NOT NULL,
     UNIQUE  (name)
 );
 
-CREATE TABLE IF NOT EXISTS events
-(
+CREATE TABLE IF NOT EXISTS events (
     id                 BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
     annotation         varchar(2000),
-    category_id        BIGINT,
-    created_on         timestamp,
+    category_id        BIGINT NOT NULL,
+    created_on         timestamp NOT NULL,
     description        varchar(7000),
     event_date         timestamp,
-    initiator_id       BIGINT,
-    location_id        BIGINT,
-    paid               boolean,
+    initiator_id       BIGINT NOT NULL,
+    location_id        BIGINT NOT NULL,
+    paid               boolean NOT NULL,
     participant_limit  INT NOT NULL,
-    published_on       timestamp,
+    published_on       timestamp NOT NULL,
     request_moderation boolean,
     state              varchar(50),
     title              varchar(120),
@@ -44,8 +40,7 @@ CREATE TABLE IF NOT EXISTS events
     UNIQUE      (id)
 );
 
-CREATE TABLE IF NOT EXISTS requests
-(
+CREATE TABLE IF NOT EXISTS requests (
     id                BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
     created           timestamp,
     event_id          BIGINT,
@@ -56,30 +51,26 @@ CREATE TABLE IF NOT EXISTS requests
     UNIQUE      (id)
 );
 
-CREATE TABLE IF NOT EXISTS compilations
-(
+CREATE TABLE IF NOT EXISTS compilations (
     id          BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
-    event_id    BIGINT,
+    event_id    BIGINT NOT NULL,
     pinned      boolean,
-    title       varchar(200),
-
+    title       varchar(200) NOT NULL,
     CONSTRAINT  fk_compilations_to_events FOREIGN KEY(event_id) REFERENCES events(id),
     UNIQUE      (id)
 );
 
-CREATE TABLE IF NOT EXISTS compilations_to_events
-(
+CREATE TABLE IF NOT EXISTS compilations_to_events (
     compilation_id  BIGINT,
     event_id        BIGINT
 );
 
-CREATE TABLE IF NOT EXISTS comments
-(
+CREATE TABLE IF NOT EXISTS comments (
     id                BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
-    created           timestamp,
-    updated           timestamp,
-    event_id          BIGINT,
-    commentator_id    BIGINT,
+    created           timestamp NOT NULL,
+    updated           timestamp NOT NULL,
+    event_id          BIGINT NOT NULL,
+    commentator_id    BIGINT NOT NULL,
     status            varchar(100),
     text              varchar(2000),
     CONSTRAINT  fk_comments_to_events FOREIGN KEY(event_id) REFERENCES events(id),
