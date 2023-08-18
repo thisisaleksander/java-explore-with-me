@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS requests (
 
 CREATE TABLE IF NOT EXISTS compilations (
     id          BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
-    event_id    BIGINT,
+    event_id    BIGINT NOT NULL,
     pinned      boolean,
     title       varchar(200),
     CONSTRAINT  fk_compilations_to_events FOREIGN KEY(event_id) REFERENCES events(id),
@@ -61,8 +61,8 @@ CREATE TABLE IF NOT EXISTS compilations (
 );
 
 CREATE TABLE IF NOT EXISTS compilations_to_events (
-    compilation_id  BIGINT,
-    event_id        BIGINT
+    compilation_id  BIGINT NOT NULL,
+    event_id        BIGINT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS comments (
