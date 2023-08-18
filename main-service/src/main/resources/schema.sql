@@ -67,11 +67,11 @@ CREATE TABLE IF NOT EXISTS compilations_to_events (
 
 CREATE TABLE IF NOT EXISTS comments (
     id                BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
-    created           timestamp,
+    created           timestamp NOT NULL,
     updated           timestamp,
-    event_id          BIGINT,
-    commentator_id    BIGINT,
-    status            varchar(100),
+    event_id          BIGINT NOT NULL,
+    commentator_id    BIGINT NOT NULL,
+    status            varchar(100) NOT NULL,
     text              varchar(2000),
     CONSTRAINT  fk_comments_to_events FOREIGN KEY(event_id) REFERENCES events(id),
     CONSTRAINT  fk_comments_to_users FOREIGN KEY(commentator_id) REFERENCES users(id),
