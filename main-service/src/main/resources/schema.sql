@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS compilations (
     id          BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
     event_id    BIGINT NOT NULL,
     pinned      boolean,
-    title       varchar(200) NOT NULL,
+    title       varchar(200),
     CONSTRAINT  fk_compilations_to_events FOREIGN KEY(event_id) REFERENCES events(id),
     UNIQUE      (id)
 );
