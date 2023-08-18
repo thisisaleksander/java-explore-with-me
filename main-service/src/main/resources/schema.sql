@@ -42,10 +42,10 @@ CREATE TABLE IF NOT EXISTS events (
 
 CREATE TABLE IF NOT EXISTS requests (
     id                BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
-    created           timestamp,
-    event_id          BIGINT,
-    requester_id      BIGINT,
-    status            varchar(100),
+    created           timestamp NOT NULL,
+    event_id          BIGINT NOT NULL,
+    requester_id      BIGINT NOT NULL,
+    status            varchar(100) NOT NULL,
     CONSTRAINT  fk_requests_to_events FOREIGN KEY(event_id) REFERENCES events(id),
     CONSTRAINT  fk_requests_to_users FOREIGN KEY(requester_id) REFERENCES users(id),
     UNIQUE      (id)
