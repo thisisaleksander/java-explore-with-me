@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.ewm.event.service.EventService;
 import ru.practicum.ewm.event.model.Event;
-import ru.practicum.ewm.exception.model.NotFoundException;
+import ru.practicum.ewm.exception.model.RequestNotFoundException;
 import ru.practicum.ewm.exception.model.ValidationException;
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 import ru.practicum.ewm.request.mapper.RequestMapper;
@@ -67,7 +67,7 @@ public class RequestServiceImpl implements RequestService {
     public List<ParticipationRequestDto> getRequests(Long userId, Long eventId) {
         Event event = eventService.findById(eventId);
         if (event.getInitiator().getId() != userId) {
-            throw new ValidationException("User is not initiator");
+            throw new ValidationException(String.format("User with id = %d is not initiator of event %d", userId, eventId));
         }
         return RequestMapper.toListParticipationRequestDtoFromListRequest(requestRepository.findByEventId(eventId));
     }
@@ -111,9 +111,10 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public ParticipationRequestDto cancelRequest(Long userId, Long requestId) {
 
-        Request request = requestRepository.findById(requestId).orElseThrow(() -> new NotFoundException("Request not found"));
+        Request request = requestRepository.findById(requestId)
+                .orElseThrow(() -> new RequestNotFoundException(requestId));
         if (request.getRequester().getId() != userId) {
-            throw new ValidationException("User is not requester");
+            throw new ValidationException(String.format("User with id = %d is not requester of request %d", userId, requestId));
         }
         request.setStatus("CANCELED");
         return RequestMapper.toParticipationRequestDtoFromRequest(requestRepository.save(request));

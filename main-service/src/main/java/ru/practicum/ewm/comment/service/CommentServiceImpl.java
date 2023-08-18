@@ -14,7 +14,7 @@ import ru.practicum.ewm.comment.dto.ParticipationCommentDto;
 import ru.practicum.ewm.comment.model.StatusUpdateComment;
 import ru.practicum.ewm.event.service.EventService;
 import ru.practicum.ewm.event.model.Event;
-import ru.practicum.ewm.exception.model.NotFoundException;
+import ru.practicum.ewm.exception.model.CommentNotFoundException;
 import ru.practicum.ewm.exception.model.ValidationException;
 import ru.practicum.ewm.user.service.UserService;
 import ru.practicum.ewm.user.model.User;
@@ -37,7 +37,8 @@ public class CommentServiceImpl implements CommentService {
         Sort sortByDate = Sort.by(Sort.Direction.ASC, "id");
         int pageIndex = from / size;
         Pageable page = PageRequest.of(pageIndex, size, sortByDate);
-        return CommentMapper.toListParticipationCommentDtoFromListComment(commentRepository.findByEventIdAndStatus(eventId, "PUBLISHED", page).toList());
+        return CommentMapper.toListParticipationCommentDtoFromListComment(
+                commentRepository.findByEventIdAndStatus(eventId, "PUBLISHED", page).toList());
     }
 
     @Override
@@ -45,7 +46,8 @@ public class CommentServiceImpl implements CommentService {
         Sort sortByDate = Sort.by(Sort.Direction.ASC, "id");
         int pageIndex = from / size;
         Pageable page = PageRequest.of(pageIndex, size, sortByDate);
-        return CommentMapper.toListParticipationCommentDtoFromListComment(commentRepository.findByCommentatorId(userId, page).toList());
+        return CommentMapper.toListParticipationCommentDtoFromListComment(
+                commentRepository.findByCommentatorId(userId, page).toList());
     }
 
     @Override
@@ -66,9 +68,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ParticipationCommentDto patchCommentPrivate(ParticipationCommentDto participationCommentDto, Long userId, Long commentId) {
         User commentator = userService.findById(userId);
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Comment not found"));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(commentId));
         if (!commentator.equals(comment.getCommentator())) {
-            throw new ValidationException("User is not commentator");
+            throw new ValidationException(String.format("User with id = %d is not commentator of comment %d", userId, commentId));
         }
         comment.setText(participationCommentDto.getText());
         comment.setStatus("PENDING");
@@ -81,9 +84,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public ParticipationCommentDto getCommentPrivate(Long userId, Long commentId) {
         User commentator = userService.findById(userId);
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Comment not found"));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(commentId));
         if (!commentator.equals(comment.getCommentator())) {
-            throw new ValidationException("User is not commentator");
+            throw new ValidationException(String.format("User with id = %d is not commentator of comment %d", userId, commentId));
         }
         return CommentMapper.toParticipationCommentDtoFromComment(comment);
     }
@@ -91,9 +95,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteCommentPrivate(Long userId, Long commentId) {
         User commentator = userService.findById(userId);
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Comment not found"));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(commentId));
         if (!commentator.equals(comment.getCommentator())) {
-            throw new ValidationException("User is not commentator");
+            throw new ValidationException(String.format("User with id = %d is not commentator of comment %d", userId, commentId));
         }
         commentRepository.deleteById(commentId);
     }
@@ -103,12 +108,14 @@ public class CommentServiceImpl implements CommentService {
         Sort sortByDate = Sort.by(Sort.Direction.ASC, "id");
         int pageIndex = from / size;
         Pageable page = PageRequest.of(pageIndex, size, sortByDate);
-        return CommentMapper.toListParticipationCommentDtoFromListComment(commentRepository.findByStatus("PENDING", page).toList());
+        return CommentMapper.toListParticipationCommentDtoFromListComment(
+                commentRepository.findByStatus("PENDING", page).toList());
     }
 
     @Override
     public ParticipationCommentDto patchCommentsAdmin(StatusUpdateComment statusUpdateComment, Long commentId) {
-        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new NotFoundException("Comment not found"));
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(commentId));
         if (statusUpdateComment.getStatus().equals("PUBLISH_COMMENT")) {
             comment.setStatus("PUBLISHED");
         }

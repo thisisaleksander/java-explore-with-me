@@ -8,7 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.practicum.ewm.exception.model.NotFoundException;
+import ru.practicum.ewm.exception.model.UserNotFoundException;
 import ru.practicum.ewm.exception.model.ValidationException;
 import ru.practicum.ewm.user.model.User;
 import ru.practicum.ewm.user.dto.UserDto;
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto saveUser(UserDto userDto) {
         if (userRepository.findByName(userDto.getName()).isPresent()) {
-            throw new ValidationException("user exist");
+            throw new ValidationException(String.format("User %s : %s already exist", userDto.getName(), userDto.getEmail()));
         }
         return UserMapper.toDtoFromEntity(userRepository.save(UserMapper.toEntityFromDto(userDto)));
     }
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
     }
-
 }

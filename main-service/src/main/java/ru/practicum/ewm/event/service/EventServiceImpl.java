@@ -15,9 +15,7 @@ import ru.practicum.ewm.event.dto.EventFullDto;
 import ru.practicum.ewm.event.dto.EventRequestDto;
 import ru.practicum.ewm.event.mapper.EventMapper;
 import ru.practicum.ewm.event.model.*;
-import ru.practicum.ewm.exception.model.NotFoundException;
-import ru.practicum.ewm.exception.model.ResponseException;
-import ru.practicum.ewm.exception.model.ValidationException;
+import ru.practicum.ewm.exception.model.*;
 import ru.practicum.ewm.location.model.Location;
 import ru.practicum.ewm.location.service.LocationService;
 import ru.practicum.ewm.user.service.UserRepository;
@@ -42,7 +40,8 @@ public class EventServiceImpl implements EventService {
     StatsClient client;
 
     @Override
-    public List<EventFullDto> getEventsAdmin(List<Long> users, List<String> states, List<Long> categories, String rangeStart, String rangeEnd, Integer from, Integer size) {
+    public List<EventFullDto> getEventsAdmin(List<Long> users, List<String> states, List<Long> categories,
+                                             String rangeStart, String rangeEnd, Integer from, Integer size) {
         Sort sortByDate = Sort.by(Sort.Direction.ASC, "id");
         int pageIndex = from / size;
         Pageable page = PageRequest.of(pageIndex, size, sortByDate);
@@ -76,12 +75,15 @@ public class EventServiceImpl implements EventService {
         }
         List<User> usersList = userRepository.findByIds(users);
         List<Category> categoriesList = categoryRepository.findByIds(categories);
-        return EventMapper.toListEventFullDtoFromListEvent(eventRepository.findByInitiatorAndStateAndCategoryAndEventDateBeforeEnd(usersList, states, categoriesList, start, end, page).toList());
+        return EventMapper.toListEventFullDtoFromListEvent(
+                eventRepository.findByInitiatorAndStateAndCategoryAndEventDateBeforeEnd(
+                        usersList, states, categoriesList, start, end, page).toList());
     }
 
     @Override
     public EventFullDto patchEventAdmin(UpdateEventAdminRequest updateEventAdminRequest, Long eventId) {
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event not found"));
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
         if (!event.getState().equals("WAITING")) {
             throw new ValidationException("Event state is not WAITING");
         }
@@ -89,7 +91,8 @@ public class EventServiceImpl implements EventService {
             event.setAnnotation(updateEventAdminRequest.getAnnotation());
         }
         if (updateEventAdminRequest.getCategory() != null) {
-            Category category = categoryRepository.findById(updateEventAdminRequest.getCategory()).orElseThrow(() -> new ValidationException("Category not found"));
+            Category category = categoryRepository.findById(updateEventAdminRequest.getCategory())
+                    .orElseThrow(() -> new ValidationException(String.format("Category with id %d not found", updateEventAdminRequest.getCategory())));
             event.setCategory(category);
         }
         if (updateEventAdminRequest.getDescription() != null) {
@@ -98,7 +101,7 @@ public class EventServiceImpl implements EventService {
         if (updateEventAdminRequest.getEventDate() != null) {
             LocalDateTime eventDate = LocalDateTime.parse(updateEventAdminRequest.getEventDate(), dateTimeFormatter);
             if (eventDate.plusHours(2).isBefore(LocalDateTime.now())) {
-                throw new ResponseException("Event date is not correct");
+                throw new ResponseException("Event date is incorrect");
             }
             event.setEventDate(eventDate);
         }
@@ -149,7 +152,7 @@ public class EventServiceImpl implements EventService {
     public EventFullDto saveEventPrivate(Long userId, EventRequestDto eventRequestDto) {
         LocalDateTime eventDate = LocalDateTime.parse(eventRequestDto.getEventDate(), dateTimeFormatter);
         if (eventDate.plusHours(2).isBefore(LocalDateTime.now())) {
-            throw new ResponseException("Event date is not correct");
+            throw new ResponseException("Event date is incorrect");
         }
         if (eventRequestDto.getPaid() == null) {
             eventRequestDto.setPaid(false);
@@ -158,8 +161,10 @@ public class EventServiceImpl implements EventService {
             eventRequestDto.setRequestModeration(true);
         }
         Location location = locationService.save(eventRequestDto.getLocation());
-        Category category = categoryRepository.findById(eventRequestDto.getCategory()).orElseThrow(() -> new NotFoundException("Category not found"));
-        User initiator = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        Category category = categoryRepository.findById(eventRequestDto.getCategory())
+                .orElseThrow(() -> new CategoryNotFoundException(eventRequestDto.getCategory()));
+        User initiator = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
         Event event = EventMapper.toEntityFromRequest(eventRequestDto, location, category, initiator);
         EventFullDto eventFullDto = EventMapper.toFullDtoFromEntity(eventRepository.save(event), event.getConfirmedRequests());
         if (eventFullDto.getState().equals("WAITING")) {
@@ -170,26 +175,27 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public EventFullDto getEventPrivate(Long userId, Long eventId) {
-        User initiator = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+        User initiator = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         Event event = eventRepository.findByIdAndInitiator(eventId, initiator);
         return EventMapper.toFullDtoFromEntity(event, event.getConfirmedRequests());
     }
 
     @Override
     public EventFullDto patchEventPrivate(UpdateEventAdminRequest updateEventAdminRequest, Long userId, Long eventId) {
-        User initiator = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException("Event not found"));
+        User initiator = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new EventNotFoundException(eventId));
         if (event.getState().equals("PUBLISHED")) {
             throw new ValidationException(String.format("Event with ID =%d is PUBLISHED", userId));
         }
-        if (!initiator.equals(userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found")))) {
+        if (!initiator.equals(userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId)))) {
             throw new ValidationException(String.format("User with ID =%d is not initiator", userId));
         }
         if (updateEventAdminRequest.getAnnotation() != null) {
             event.setAnnotation(updateEventAdminRequest.getAnnotation());
         }
         if (updateEventAdminRequest.getCategory() != null) {
-            Category category = categoryRepository.findById(updateEventAdminRequest.getCategory()).orElseThrow(() -> new ValidationException("Category not found"));
+            Category category = categoryRepository.findById(updateEventAdminRequest.getCategory())
+                    .orElseThrow(() -> new ValidationException(String.format("Category with id %d not found", updateEventAdminRequest.getCategory())));
             event.setCategory(category);
         }
         if (updateEventAdminRequest.getDescription() != null) {
@@ -198,7 +204,7 @@ public class EventServiceImpl implements EventService {
         if (updateEventAdminRequest.getEventDate() != null) {
             LocalDateTime eventDate = LocalDateTime.parse(updateEventAdminRequest.getEventDate(), dateTimeFormatter);
             if (eventDate.plusHours(2).isBefore(LocalDateTime.now())) {
-                throw new ResponseException("Event date is not correct");
+                throw new ResponseException("Event date is incorrect");
             }
             event.setEventDate(eventDate);
         }
@@ -234,7 +240,9 @@ public class EventServiceImpl implements EventService {
 
 
     @Override
-    public List<EventFullDto> getEventsPublic(String text, List<Long> categories, String paid, String rangeStart, String rangeEnd, String onlyAvailable, String sort, Integer from, Integer size, String uri, String ip) {
+    public List<EventFullDto> getEventsPublic(String text, List<Long> categories, String paid, String rangeStart,
+                                              String rangeEnd, String onlyAvailable, String sort, Integer from,
+                                              Integer size, String uri, String ip) {
         Sort sortByDate = Sort.by(Sort.Direction.ASC, "id");
         int pageIndex = from / size;
         Pageable page = PageRequest.of(pageIndex, size, sortByDate);
@@ -267,17 +275,20 @@ public class EventServiceImpl implements EventService {
         }
         if (categories.isEmpty()) {
             client.postHit(uri, ip);
-            return EventMapper.toListEventFullDtoFromListEvent(eventRepository.getEventsNoCategory(text, listPaid, start, end, page).toList());
+            return EventMapper.toListEventFullDtoFromListEvent(
+                    eventRepository.getEventsNoCategory(text, listPaid, start, end, page).toList());
         }
         client.postHit(uri, ip);
-        return EventMapper.toListEventFullDtoFromListEvent(eventRepository.findByQuery(text, categories, listPaid, start, end, page).toList());
+        return EventMapper.toListEventFullDtoFromListEvent(
+                eventRepository.findByQuery(text, categories, listPaid, start, end, page).toList());
     }
 
     @Override
     public EventFullDto getEventPublic(Long id, String uri, String ip) {
-        Event event = eventRepository.findById(id).orElseThrow(() -> new NotFoundException("Event not found"));
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new EventNotFoundException(id));
         if (event.getState().equals("WAITING")) {
-            throw new NotFoundException("Event not found");
+            throw new EventNotFoundException(id);
         }
         client.postHit(uri, ip);
         event.setViews(client.getViews(uri));
@@ -297,7 +308,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event findById(Long eventId) {
-        return eventRepository.findById(eventId).orElseThrow(() -> new NotFoundException(String.format("Событие с ID =%d не найден", eventId)));
+        return eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventNotFoundException(eventId));
     }
 
     @Override

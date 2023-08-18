@@ -21,7 +21,4 @@ public class LocationServiceImpl implements LocationService {
     public Location save(Location location) {
         return locationRepository.save(location);
     }
-
-
-
 }

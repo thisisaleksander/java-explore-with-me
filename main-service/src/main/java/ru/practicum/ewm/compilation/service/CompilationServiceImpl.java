@@ -14,7 +14,7 @@ import ru.practicum.ewm.compilation.mapper.CompilationMapper;
 import ru.practicum.ewm.compilation.model.*;
 import ru.practicum.ewm.event.service.EventService;
 import ru.practicum.ewm.event.model.Event;
-import ru.practicum.ewm.exception.model.NotFoundException;
+import ru.practicum.ewm.exception.model.CompilationNotFoundException;
 
 import java.util.List;
 
@@ -42,7 +42,8 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationDto patchCompilation(UpdateCompilationRequest updateCompilationRequest, Long compId) {
         List<Event> events = eventService.findByIds(updateCompilationRequest.getEvents());
-        Compilation compilation = compilationRepository.findById(compId).orElseThrow(() -> new NotFoundException("Compilation not found"));
+        Compilation compilation = compilationRepository.findById(compId)
+                .orElseThrow(() -> new CompilationNotFoundException(compId));
         if (events != null) {
             compilation.setEvents(events);
         }
@@ -65,6 +66,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto getCompilation(Long compId) {
-        return CompilationMapper.toDtoFromEntity(compilationRepository.findById(compId).orElseThrow(() -> new NotFoundException("Compilation not found")));
+        return CompilationMapper.toDtoFromEntity(compilationRepository.findById(compId)
+                .orElseThrow(() -> new CompilationNotFoundException(compId)));
     }
 }

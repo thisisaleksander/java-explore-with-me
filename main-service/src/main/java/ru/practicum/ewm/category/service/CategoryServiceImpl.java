@@ -12,7 +12,7 @@ import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.category.dto.CategoryDto;
 import ru.practicum.ewm.category.mapper.CategoryMapper;
 import ru.practicum.ewm.event.service.EventService;
-import ru.practicum.ewm.exception.model.NotFoundException;
+import ru.practicum.ewm.exception.model.CategoryNotFoundException;
 import ru.practicum.ewm.exception.model.ValidationException;
 
 import java.util.List;
@@ -29,14 +29,15 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto saveCategory(CategoryDto categoryDto) {
         if (categoryRepository.findByName(categoryDto.getName()).isPresent()) {
-            throw new ValidationException("Category exist");
+            throw new ValidationException(String.format("Category %d : %s already exist", categoryDto.getId(), categoryDto.getName()));
         }
         return CategoryMapper.toDtoFromEntity(categoryRepository.save(CategoryMapper.toEntityFromDto(categoryDto)));
     }
 
     @Override
     public void deleteCategory(Long catId) {
-        Category category = categoryRepository.findById(catId).orElseThrow(() -> new NotFoundException("Category is not found"));
+        Category category = categoryRepository.findById(catId)
+                .orElseThrow(() -> new CategoryNotFoundException(catId));
         if (eventService.findByCategory(category)) {
             throw new ValidationException("Category is related with Event");
         }
@@ -46,12 +47,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto patchCategory(CategoryDto categoryDto, Long catId) {
         categoryDto.setId(catId);
-        Category categoryFromRepository = categoryRepository.findById(catId).orElseThrow(() -> new NotFoundException("Cat is not found"));
+        Category categoryFromRepository = categoryRepository.findById(catId).orElseThrow(() -> new CategoryNotFoundException(catId));
         if (categoryDto.getName().equals(categoryFromRepository.getName())) {
             return categoryDto;
         }
         if (categoryRepository.findByName(categoryDto.getName()).isPresent()) {
-            throw new ValidationException("Category exist");
+            throw new ValidationException(String.format("Category %d : %s already exist", catId, categoryDto.getName()));
         }
         return CategoryMapper.toDtoFromEntity(categoryRepository.save(CategoryMapper.toEntityFromDto(categoryDto)));
     }
@@ -66,6 +67,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto getCategory(Long catId) {
-        return CategoryMapper.toDtoFromEntity(categoryRepository.findById(catId).orElseThrow(() -> new NotFoundException("Category is not found")));
+        return CategoryMapper.toDtoFromEntity(categoryRepository.findById(catId)
+                .orElseThrow(() -> new CategoryNotFoundException(catId)));
     }
 }
