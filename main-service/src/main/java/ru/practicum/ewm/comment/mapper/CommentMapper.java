@@ -4,14 +4,13 @@ import lombok.NoArgsConstructor;
 import ru.practicum.ewm.comment.model.Comment;
 import ru.practicum.ewm.comment.dto.ParticipationCommentDto;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.practicum.ewm.utils.DateUtils.dateTimeFormatter;
+
 @NoArgsConstructor
 public class CommentMapper {
-    static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     public static ParticipationCommentDto toParticipationCommentDtoFromComment(Comment comment) {
         ParticipationCommentDto participationCommentDto = new ParticipationCommentDto();
         participationCommentDto.setId(comment.getId());

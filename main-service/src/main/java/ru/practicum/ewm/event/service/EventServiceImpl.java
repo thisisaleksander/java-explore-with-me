@@ -24,9 +24,10 @@ import ru.practicum.ewm.user.service.UserRepository;
 import ru.practicum.ewm.user.model.User;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static ru.practicum.ewm.utils.DateUtils.dateTimeFormatter;
 
 @Service
 @RequiredArgsConstructor
@@ -35,15 +36,9 @@ import java.util.List;
 public class EventServiceImpl implements EventService {
 
     EventRepository eventRepository;
-
     UserRepository userRepository;
-
     CategoryRepository categoryRepository;
-
     LocationService locationService;
-
-    static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     StatsClient client;
 
     @Override

@@ -4,15 +4,13 @@ import lombok.NoArgsConstructor;
 import ru.practicum.ewm.request.dto.ParticipationRequestDto;
 import ru.practicum.ewm.request.model.Request;
 
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.practicum.ewm.utils.DateUtils.dateTimeFormatter;
+
 @NoArgsConstructor
 public class RequestMapper {
-
-    static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     public static ParticipationRequestDto toParticipationRequestDtoFromRequest(Request request) {
         ParticipationRequestDto participationRequestDto = new ParticipationRequestDto();
         participationRequestDto.setId(request.getId());

@@ -9,15 +9,13 @@ import ru.practicum.ewm.location.model.Location;
 import ru.practicum.ewm.user.model.User;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static ru.practicum.ewm.utils.DateUtils.dateTimeFormatter;
+
 @NoArgsConstructor
 public class EventMapper {
-
-    static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     public static Event toEntityFromRequest(EventRequestDto eventRequestDto, Location location, Category category, User initiator) {
         Event event = new Event();
         event.setAnnotation(eventRequestDto.getAnnotation());
