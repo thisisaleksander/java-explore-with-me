@@ -9,7 +9,6 @@ import java.util.List;
 
 @NoArgsConstructor
 public class UserMapper {
-
         public static User toEntityFromDto(UserDto userDto) {
             User user = new User();
             user.setName(userDto.getName());

@@ -12,7 +12,6 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
     @Query("select MAX(id) " +
             "from User as u ")
     Long findMaxId();

@@ -35,19 +35,15 @@ import java.util.List;
 @RequestMapping(path = "/admin")
 @Validated
 public class AdminController {
+
     CategoryService categoryService;
-
     EventService eventService;
-
     UserService userService;
-
     CompilationService compilationService;
-
     CommentService commentService;
 
     @PostMapping("/categories")
     public ResponseEntity<CategoryDto> saveCategory(@RequestBody @Valid CategoryDto categoryDto) {
-
         return new ResponseEntity<CategoryDto>(categoryService.saveCategory(categoryDto), HttpStatus.CREATED);
     }
 

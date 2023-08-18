@@ -13,7 +13,6 @@ import java.util.List;
 @Transactional
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
-
     List<Request> findByRequesterId(Long userId);
 
     @Modifying

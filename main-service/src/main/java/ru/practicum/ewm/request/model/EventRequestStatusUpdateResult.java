@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventRequestStatusUpdateResult {
-
     List<ParticipationRequestDto> confirmedRequests;
 
     List<ParticipationRequestDto> rejectedRequests;

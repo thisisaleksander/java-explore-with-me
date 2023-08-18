@@ -12,7 +12,6 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateEventAdminRequest {
-
     @Size(min = 20, max = 2000)
     String annotation;
 

@@ -21,13 +21,13 @@ public class User {
     long id;
 
     @Column(name = "email", nullable = false)
-    @Email(message = "email введен не верно")
+    @Email
     @NotBlank
     @Size(min = 6, max = 254)
     String email;
 
     @Column(name = "name", nullable = false)
-    @NotBlank(message = "Имя не может быть пустым или содержать только пробелы")
+    @NotBlank
     @Size(min = 2, max = 250)
     String name;
 }

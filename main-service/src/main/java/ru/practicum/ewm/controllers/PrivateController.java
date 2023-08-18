@@ -36,9 +36,7 @@ import java.util.List;
 public class PrivateController {
 
     EventService eventService;
-
     RequestService requestService;
-
     CommentService commentService;
 
     @GetMapping("/events")

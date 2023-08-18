@@ -26,15 +26,12 @@ import java.util.List;
 public class RequestServiceImpl implements RequestService {
 
     RequestRepository requestRepository;
-
     UserService userService;
-
     EventService eventService;
 
     @Override
     public List<ParticipationRequestDto> getAllRequest(Long userId) {
         User requester = userService.findById(userId);
-
         return RequestMapper.toListParticipationRequestDtoFromListRequest(requestRepository.findByRequester(requester));
     }
 

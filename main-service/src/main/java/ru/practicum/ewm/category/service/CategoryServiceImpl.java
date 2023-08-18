@@ -24,7 +24,6 @@ import java.util.List;
 public class CategoryServiceImpl implements CategoryService {
 
     CategoryRepository categoryRepository;
-
     EventService eventService;
 
     @Override

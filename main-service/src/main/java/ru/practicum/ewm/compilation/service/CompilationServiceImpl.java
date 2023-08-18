@@ -25,7 +25,6 @@ import java.util.List;
 public class CompilationServiceImpl implements CompilationService {
 
     CompilationRepository compilationRepository;
-
     EventService eventService;
 
     @Override

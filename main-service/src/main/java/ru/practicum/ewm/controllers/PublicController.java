@@ -29,11 +29,8 @@ import java.util.List;
 public class PublicController {
 
     CompilationService compilationService;
-
     CategoryService categoryService;
-
     EventService eventService;
-
     CommentService commentService;
 
     @GetMapping("/compilations")

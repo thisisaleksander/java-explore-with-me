@@ -20,10 +20,10 @@ public class Location {
     long id;
 
     @Column(name = "lat", nullable = false)
-    @NotNull(message = "lat не может быть пустым")
+    @NotNull
     float lat;
 
     @Column(name = "lon", nullable = false)
-    @NotNull(message = "lon не может быть пустым")
+    @NotNull
     float lon;
 }

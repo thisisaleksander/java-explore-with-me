@@ -15,12 +15,12 @@ import javax.validation.constraints.Size;
 public class UserDto {
     long id;
 
-    @Email(message = "email введен не верно")
+    @Email
     @NotBlank
     @Size(min = 6, max = 254)
     String email;
 
-    @NotBlank(message = "Имя не может быть пустым или содержать только пробелы")
+    @NotBlank
     @Size(min = 2, max = 250)
     String name;
 }

@@ -29,9 +29,7 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService {
 
     CommentRepository commentRepository;
-
     UserService userService;
-
     EventService eventService;
 
     @Override

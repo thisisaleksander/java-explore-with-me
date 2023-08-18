@@ -16,7 +16,6 @@ import java.util.Optional;
 
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
-
     @Query("select e " +
             "from Event as e " +
             "where e.initiator in ?1 " +

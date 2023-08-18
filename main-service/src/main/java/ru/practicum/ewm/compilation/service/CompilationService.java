@@ -9,7 +9,6 @@ import java.util.List;
 
 @Transactional(readOnly = true)
 public interface CompilationService {
-
     @Transactional
     CompilationDto saveCompilation(NewCompilationDto newCompilationDto);
 

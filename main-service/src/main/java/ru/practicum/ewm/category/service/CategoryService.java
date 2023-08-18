@@ -7,7 +7,6 @@ import java.util.List;
 
 @Transactional(readOnly = true)
 public interface CategoryService {
-
     @Transactional
     CategoryDto saveCategory(CategoryDto categoryDto);
 
