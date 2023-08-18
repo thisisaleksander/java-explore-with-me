@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS locations (
 
 CREATE TABLE IF NOT EXISTS categories (
     id      BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
-    name    varchar(50) NOT NULL,
+    name    varchar(50),
     UNIQUE  (name)
 );
 
@@ -21,9 +21,9 @@ CREATE TABLE IF NOT EXISTS events (
     id                 BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
     annotation         varchar(2000),
     category_id        BIGINT NOT NULL,
-    created_on         timestamp,
+    created_on         timestamp NOT NULL,
     description        varchar(7000),
-    event_date         timestamp,
+    event_date         timestamp NOT NULL,
     initiator_id       BIGINT NOT NULL,
     location_id        BIGINT,
     paid               boolean,
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS requests (
 
 CREATE TABLE IF NOT EXISTS compilations (
     id          BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
-    event_id    BIGINT NOT NULL,
+    event_id    BIGINT,
     pinned      boolean,
     title       varchar(200),
     CONSTRAINT  fk_compilations_to_events FOREIGN KEY(event_id) REFERENCES events(id),
@@ -67,10 +67,10 @@ CREATE TABLE IF NOT EXISTS compilations_to_events (
 
 CREATE TABLE IF NOT EXISTS comments (
     id                BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL PRIMARY KEY,
-    created           timestamp NOT NULL,
-    updated           timestamp NOT NULL,
-    event_id          BIGINT NOT NULL,
-    commentator_id    BIGINT NOT NULL,
+    created           timestamp,
+    updated           timestamp,
+    event_id          BIGINT,
+    commentator_id    BIGINT,
     status            varchar(100),
     text              varchar(2000),
     CONSTRAINT  fk_comments_to_events FOREIGN KEY(event_id) REFERENCES events(id),
