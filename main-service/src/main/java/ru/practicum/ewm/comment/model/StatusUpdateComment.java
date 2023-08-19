@@ -1,4 +1,4 @@
-package ru.practicum.ewm.request.model;
+package ru.practicum.ewm.comment.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -10,9 +10,11 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class EventRequestStatusUpdateRequest {
-    List<Long> requestIds;
+public class StatusUpdateComment {
+
+    List<Long> commentIds;
 
     String status;
 
+    String text;
 }

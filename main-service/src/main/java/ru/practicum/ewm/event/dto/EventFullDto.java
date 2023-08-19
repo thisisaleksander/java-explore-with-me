@@ -1,37 +1,46 @@
-package ru.practicum.ewm.event.model;
+package ru.practicum.ewm.event.dto;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import ru.practicum.ewm.category.model.Category;
 import ru.practicum.ewm.location.model.Location;
-
-import javax.validation.constraints.Size;
+import ru.practicum.ewm.user.model.User;
 
 @Getter
 @Setter
 @ToString
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateEventAdminRequest {
-    @Size(min = 20, max = 2000)
+public class EventFullDto {
+    long id;
+
     String annotation;
 
-    Long category;
+    Category category;
 
-    @Size(min = 20, max = 7000)
+    String createdOn;
+
     String description;
 
     String eventDate;
 
-    Location location;
+    User initiator;
 
-    int participantLimit;
+    Location location;
 
     Boolean paid;
 
+    int participantLimit;
+
+    String publishedOn;
+
     Boolean requestModeration;
 
-    String stateAction;
+    String state;
 
-    @Size(min = 3, max = 120)
     String title;
+
+    Long views;
+
+    int confirmedRequests;
 }

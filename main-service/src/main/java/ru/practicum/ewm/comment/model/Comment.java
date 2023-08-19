@@ -1,4 +1,4 @@
-package ru.practicum.ewm.request.model;
+package ru.practicum.ewm.comment.model;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -12,12 +12,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "requests", schema = "public")
+@Table(name = "comments", schema = "public")
 @Getter
 @Setter
 @ToString
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Request {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
@@ -25,12 +25,18 @@ public class Request {
     @Column
     LocalDateTime created;
 
-    @OneToOne
+    @Column
+    LocalDateTime updated;
+
+    @ManyToOne
     Event event;
 
-    @OneToOne
-    User requester;
+    @ManyToOne
+    User commentator;
 
     @Column
     String status;
+
+    @Column
+    String text;
 }
